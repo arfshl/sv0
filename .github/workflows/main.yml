@@ -41,7 +41,7 @@ jobs:
         -d "capture_all=1" \
         -d "skip_first_archive=1" \
         "https://web.archive.org/save"
-        sleep 60
+        sleep 120
         done < url.txt
 
 env:
