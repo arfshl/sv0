@@ -1,0 +1,49 @@
+name: main
+
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+  
+  
+  
+permissions:
+  contents: write
+
+
+jobs:
+
+
+  save:
+
+
+    runs-on: ubuntu-latest
+
+
+    steps:
+    - uses: actions/checkout@v5
+    
+    - name: main
+      shell: bash
+      env:
+        ACCESS2: ${{ secrets.ACCESS2 }}
+        SECRET2: ${{ secrets.SECRET2 }}
+      run: |
+        while read -r url; do
+        [ -z "$url" ] && continue
+        echo "Archiving: $url"
+        curl -X POST \
+        -H "Authorization: LOW $ACCESS2:$SECRET2" \
+        -H "Accept: application/json" \
+        -d "url=$url" \
+        -d "capture_outlinks=1" \
+        -d "capture_all=1" \
+        -d "skip_first_archive=1" \
+        "https://web.archive.org/save"
+        sleep 60
+        done < url.txt
+
+env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
